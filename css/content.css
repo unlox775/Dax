@@ -1,0 +1,74 @@
+/* -- Main Content --------------------------------------------------------- */
+.dijitPopup h2, .main-content h2 {
+    background: url(../images/small_header.png) no-repeat 0 0;
+    color:#527EA6;
+    font-size:18px;
+    font-weight:normal;
+    margin:0;
+    padding-left:62px;
+    height:59px;
+    padding-top:31px;
+    text-transform:lowercase;
+    margin-left: -31px;
+}
+.dijitPopup h2.medium, .main-content h2.medium {
+    background: url(../images/medium_header.png) no-repeat 0 0;
+    height:56px;
+    padding-top:33px;
+    padding-left:72px;
+}
+.dijitPopup h2.large, .main-content h2.large {
+    background: url(../images/large_header.png) no-repeat 0 0;
+    height:54px;
+    padding-top:35px;
+    padding-left:72px;
+}
+
+hr {
+    border-bottom: 1px dashed #cdcdcd;
+    margin-top: 15px;
+    clear: both;
+}
+
+
+/* --- Editor HACK, turn the "Q" tag to a "Float Left" --- */
+.dijitPopup .float_left {
+    display: block;
+    text-align: left;
+}
+.main-content .float_left {
+    display: block;
+    float: left;
+    margin: 0 15px 15px 0;
+    font: inherit;
+    white-space: inherit;
+    letter-spacing: inherit;
+}
+/* --- Editor HACK, turn the "CENTER" tag to a "Float Right" --- */
+.dijitPopup .float_right {
+    display: block;
+    text-align: right;
+}
+.main-content .float_right {
+    display: block;
+    float: right;
+    margin: 0 0 15px 15px;
+    font: inherit;
+    white-space: inherit;
+    letter-spacing: inherit;
+    text-align: left;
+}
+
+
+.dijitPopup h3, .main-content h3 {
+    color: #cc4145;
+    font-size: 14px;
+    margin-bottom: 15px;
+    padding-top: 14px;
+}
+.dijitPopup p, .main-content p {
+    letter-spacing:-0.03em;
+    line-height:18px;
+    margin: 0;
+    padding-bottom: 20px;
+}

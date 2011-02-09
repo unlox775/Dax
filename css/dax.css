@@ -1,0 +1,102 @@
+/* Override changes that might be made to a span by other css styles */
+.dax_editable,
+.dax_editable_buttons,
+.dax_editable_content {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+span.dax_editable {
+    display: block;
+    position: relative;
+}
+
+
+/* ---  Hovering "Click to Edit" thingy  --- */
+span.dax_editable_buttons {
+    display: none;
+    position: absolute;
+    top: -15px;
+    right: -5px;
+    padding: 3px;
+    border: 1px solid red !important;
+    /* ---  Reset a bunch of inherited things that would be styled by the parent  --- */
+    background: #fff;
+    color: #000;
+    font-size: 10px;
+    font-face: verdana,helvetica,arial,sans-serif;
+    line-height: 10pt;
+    text-transform: none;
+    text-decoration: none;
+}
+span.dax_editable_buttons a {
+    /* ---  Reset a bunch of inherited things that would be styled by the parent  --- */
+    background: #fff;
+    color: #000;
+    font-size: 10px;
+    font-face: verdana,helvetica,arial,sans-serif;
+    line-height: 10pt;
+    text-transform: none;
+    text-decoration: none;
+}
+span.dax_editable:hover .dax_editable_buttons { display: block; }
+
+/* ---  Hide things when the dax module is focused  --- */
+.dax_editable-current_focus .dax_editable_prefix,
+.dax_editable-current_focus .dax_editable_suffix { display: none; }
+span.dax_editable-current_focus:hover .dax_editable_buttons { display: none; }
+
+.dax_editable-textarea textarea { width: 100%; height: 200px; }
+.dax_editable-input    input    { width: 100%; }
+.dax_editable-image_container {
+    position: relative;
+    display: inline-block;
+}
+.dax_editable-image {
+    position: absolute;
+    background: url(../images/upload_image.png) 50% 50% no-repeat;
+    width: 16px;
+    height: 16px;
+    right: 15px;
+    bottom: 8px;
+    border: 1px solid red;
+    z-index: 255;
+}
+.dax_editable-image_container a {
+    width: auto;
+    height: auto;
+    float: none;
+    margin: 0;
+    padding: 0;
+    position: static;
+}
+.dax_editable-image_container a.kill-parent-a-links {
+    width: auto;
+    height: auto;
+    float: none;
+    margin: 0;
+    padding: 0;
+    position: static;
+}
+
+/* ---  Dojo Re-Styling  --- */
+.tundra .dijitEditor .dijitToolbar .dijitArrowButtonInner {
+    background:url("../js/dax_dojo/dijit/themes/tundra/images/spriteArrows.png") no-repeat scroll 0 center transparent;
+    font-size:1px;
+    height:7px;
+    height:7px !important;
+    margin:0 4px 0 5px;
+    width:7px;
+}
+.tundra .dijitEditor .dijitToolbar .dijitComboBox .dijitArrowButtonInner {
+    margin-top:4px;
+}
+.tundra ul.dijitMenu {
+    list-style-type: none;
+}
+
+.dojoxEditorUploadNorm {
+    background: url(../images/upload_image.png) 50% 50% no-repeat;
+}
+
