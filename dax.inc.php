@@ -3,36 +3,38 @@
 require_once(dirname(__FILE__) .'/config.inc.php');
 
 ###  Load debugging
-if ( ! function_exists('bug') ) require_once($_SERVER['DOCUMENT_ROOT'] . $DAX_BASE .'/debug.inc.php');
+if ( ! function_exists('bug') ) require_once(dirname(__FILE__) . '/debug.inc.php');
 ###  Load Model libs
-require_once($_SERVER['DOCUMENT_ROOT'] . $DAX_BASE .'/db.inc.php');
-if ( ! class_exists('SimpleORM') ) require_once($_SERVER['DOCUMENT_ROOT'] . $DAX_BASE .'/SimpleORM.class.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . $DAX_BASE .'/SimpleORM/Local.class.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . $DAX_BASE .'/model/ContentSection.class.php');
+require_once(dirname(__FILE__) . '/db.inc.php');
+if ( ! class_exists('SimpleORM') ) require_once(dirname(__FILE__) . '/SimpleORM.class.php');
+require_once(dirname(__FILE__) . '/SimpleORM/Local.class.php');
+require_once(dirname(__FILE__) . '/model/ContentSection.class.php');
 
 
 #########################
 ###  DAX Global Functions
 
-$dax_empty_scrub_content = '<i>Click here to add Content</i>';
+$GLOBALS['dax_empty_scrub_content'] = '<i>Click here to add Content</i>';
 function dax_get_content($content_id, $with_empty_scrub = false, $prefix = '', $suffix = '') {
     global $dax_empty_scrub_content;
     
     $sect = new ContentSection($content_id);
-    if ( ! $sect->exists()
-         || empty( $sect->content )
+    if ( ! dax_call_user_func_array_cached( array( $sect, 'exists'), array() )
+         || ! ( $content = dax_call_user_func_array_cached( array( $sect, 'get'), array('content') ) )
+         || empty( $content )
          ) {
         if ( $with_empty_scrub ) return $dax_empty_scrub_content;
         return '';
     }
-    return $prefix. $sect->content .$suffix;
+    return $prefix. $content .$suffix;
 }
 
 
 function dax_has_content($content_id) {
     $sect = new ContentSection($content_id);
-    if ( ! $sect->exists()
-         || empty( $sect->content )
+    if ( ! dax_call_user_func_array_cached( array( $sect, 'exists'), array() )
+         || ! ( $content = dax_call_user_func_array_cached( array( $sect, 'get'), array('content') ) )
+         || empty( $content )
          ) {
         return false;
     }
@@ -42,7 +44,7 @@ function dax_has_content($content_id) {
 
 function dax_module( $type, $content_id, $prefix = '', $suffix = '', $style = '' ) {
     global $EDIT_DAX_MODE, $DAX_EDITOR_LAUNCH_MODE;
-    if (! $EDIT_DAX_MODE) return dax_get_content($content_id, false, $prefix, $suffix);
+    if ( !$EDIT_DAX_MODE ) return dax_get_content($content_id, false, $prefix, $suffix);
 
     ###  Only certain module types, please
     if ( ! in_array($type, array('input','textarea','richtext')) ) trigger_error("Bad content module type '". $type ."' in " . trace_blame_line(), E_USER_ERROR);
@@ -115,5 +117,8 @@ function dax_image_upload( $content_id, $extra_attrs = '', $default_img = 'dax_b
 
 
 ###  Check Authentication
-require_once($_SERVER['DOCUMENT_ROOT'] . $DAX_BASE .'/auth.inc.php');
-$EDIT_DAX_MODE = dax_check_auth();
+require_once(dirname(__FILE__) . '/auth.inc.php');
+$GLOBALS['EDIT_DAX_MODE'] = dax_check_auth();
+
+###  Load Cache Hook too if
+require_once(dirname(__FILE__) . '/cache_hook.inc.php');
