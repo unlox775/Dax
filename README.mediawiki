@@ -1,0 +1,38 @@
+This is the DAX content management system!
+
+
+== Why create an Edit-in-Place CMS?! ==
+
+DAX lets the End-User switch to "EDIT MODE" then just browse
+around their web site and edit their content right in-place.
+This lets them edit headers, images, and large blocks of
+text.  We've found that modern web design doesn't fit the
+bill of a single content area per web page.  And because
+layout can be complex and flow in a very custom style, it's
+almost impossible for the CMS to actually be able to change
+and/or control the flow of items on the page.
+
+So, to heck with it!  Lets leave layout in the hands of the
+experts (Us), and let the clients worry about what to put in
+our layout.  Joomla and even wordpress are allowing clients
+to edit more than one content block per page from their Admin
+area.  However, this style offers Nothing in the way of
+WYSIWYG; usually the style for the text they just entered
+cannot be viewed in-context until they publish and go visit
+the web page.
+
+Another advantage of Edit-in-Place are DAX's Image Upload
+Modules, which let you replace an image instantly and
+in-context.  Using the <a
+href="http://istyle.dax-dev.com/">Image Style System</a>,
+we are also able to have instant advanced compositing of the
+image they just uploaded to frame, sharpen, crop or more.
+
+
+== How it works ==
+
+# Install the "dax" folder, and the "istyle" folders
+# Edit the config files (unless you just put them in the docroot, then you're all ready to go)
+# Provide some way to log in and out.  The above form source is all that is needed.  You can put this in some un-listed URL at minimum.
+# Then, For each page that you want editable add this to the very top (if it does SESSION, it needs to do headers):<pre><?php require_once($_SERVER['DOCUMENT_ROOT'] . '/dax/dax.inc.php'); ?></pre>Add add this to the head tag:<pre><?php require_once($_SERVER['DOCUMENT_ROOT'] . $DAX_HEADERS_INCLUDE); ?></pre>
+# It stores all the text strings (and image paths) in a SQLite DB in /dax/sqlite/
