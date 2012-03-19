@@ -1,15 +1,16 @@
 <?php
-ini_set('display_errors',true);
+///  leave this to others...
+// ini_set('display_errors',true);
 
 ###  Constants
-$DAX_BASE = "/dax";
-$DAX_JS_LIB = 'dojo';
-$DAX_JQUERY_BASE = $DAX_BASE ."/js/dax_jquery";
-$DAX_DOJO_BASE = $DAX_BASE ."/js/dax_dojo";
-$DAX_HEADERS_INCLUDE = $DAX_BASE ."/headers.inc.php";
+$GLOBALS['DAX_BASE'] = "/dax";
+$GLOBALS['DAX_JS_LIB'] = 'jquery';
+$GLOBALS['DAX_JQUERY_BASE'] = $GLOBALS['DAX_BASE'] ."/js/dax_jquery";
+$GLOBALS['DAX_DOJO_BASE'] = $GLOBALS['DAX_BASE'] ."/js/dax_dojo";
+$GLOBALS['DAX_HEADERS_INCLUDE'] = realpath( dirname(__FILE__ ) ) . "/headers.inc.php" ;
 
 ###  Editor Configurations
-$DAX_EDITOR_LAUNCH_MODE = 'in_place';
+$GLOBALS['DAX_EDITOR_LAUNCH_MODE'] = 'in_place';
 
 ###  DB Setup
 $DAX_DSN = 'sqlite:'. $_SERVER['DOCUMENT_ROOT'] . $DAX_BASE .'/sqlite/dax.sq3';
@@ -22,10 +23,10 @@ $DAX_DSN = 'sqlite:'. $_SERVER['DOCUMENT_ROOT'] . $DAX_BASE .'/sqlite/dax.sq3';
 @define('SimpleORM_DEBUG', false);
 
 ###  Other Globals
-$EDIT_DAX_MODE = false;
+$GLOBALS['EDIT_DAX_MODE'] = false;
 
 ###  HTML Tag Scrubber Configuration (JSON)
-$DAX_SCRUB_CONFIG = <<<CONFIG
+$GLOBALS['DAX_SCRUB_CONFIG'] = <<<CONFIG
 
       { allowed_tags : { div : true,
                          hr : true,

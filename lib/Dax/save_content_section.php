@@ -1,14 +1,17 @@
 <?php
+###  Get extend Object
+if ( ! class_exists('Stark__Extend') ) require_once(realpath( dirname(__FILE__) .'/../Stark' ) .'/Extend.class.php');
+$GLOBALS['dax_extend'] = new Stark__Extend();  function dax_ex() { return $GLOBALS['dax_extend']; }
 ###  Constants
 require_once(dirname(__FILE__) .'/config.inc.php');
 
 ###  Load debugging
-require_once($_SERVER['DOCUMENT_ROOT'] . $DAX_BASE .'/debug.inc.php');
+if ( ! function_exists('bug') ) require_once(dirname(__FILE__) .'/debug.inc.php');
 ###  Load Model libs
-require_once($_SERVER['DOCUMENT_ROOT'] . $DAX_BASE .'/db.inc.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . $DAX_BASE .'/SimpleORM.class.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . $DAX_BASE .'/SimpleORM/Local.class.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . $DAX_BASE .'/model/ContentSection.class.php');
+require_once(dirname(__FILE__) .'/db.inc.php');
+if ( ! class_exists('SimpleORM') ) require_once(dirname(__FILE__) .'/SimpleORM.class.php');
+require_once(dirname(__FILE__) .'/SimpleORM/Local.class.php');
+require_once(dirname(__FILE__) .'/model/ContentSection.class.php');
 
 
 #########################
@@ -30,5 +33,10 @@ else {
     $sect->set_and_save(array( 'content' => $_REQUEST['content'] ));
 }
 
-header('Content-type: application/json');
-echo '{"status":"ok"}';
+if ( isset( $_REQUEST['callback'] ) ) {
+    header('Content-type: text/plain');
+    echo $_REQUEST['callback'].'('. '{"status":"ok"}' .')';
+} else {
+    header('Content-type: application/json');
+    echo '{"status":"ok"}';
+}

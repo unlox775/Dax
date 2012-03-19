@@ -17,11 +17,19 @@ class SimpleORM__DAX__Local extends SimpleORM {
     /**
      * provide_dbh() - Internal method to give a database handle to each SimplORM-derived objects for Local
      */
-    protected function provide_dbh() { return $GLOBALS['DAX_DBH']; }
+    protected function provide_dbh() {
+		/* HOOK */$__x = array('provide_dbh', -10000, 10); foreach(dax_ex()->rhni(get_defined_vars(),$__x) as $__xi) dax_ex()->sv($__xi,$$__xi);dax_ex()->srh();if(dax_ex()->hr()) return dax_ex()->get_return();
+
+		return $GLOBALS['DAX_DBH'];
+	}
 
     /**
      * provide_db_type() - Internal method to give a database handle to each SimplORM-derived objects for Local
      */
-    protected function provide_db_type() { return $GLOBALS['DAX_DB_TYPE']; }
+    protected function provide_db_type() {
+		/* HOOK */$__x = array('dbh_type', -10000, 10); foreach(dax_ex()->rhni(get_defined_vars(),$__x) as $__xi) dax_ex()->sv($__xi,$$__xi);dax_ex()->srh();if(dax_ex()->hr()) return dax_ex()->get_return();
+
+		return $GLOBALS['DAX_DB_TYPE'];
+	}
 
 }

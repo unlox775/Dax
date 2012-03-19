@@ -9,7 +9,7 @@
  * @subpackage Model Objects
  */
 class ContentSection extends SimpleORM__DAX__Local {
-    protected $table       = 'content_section';
+    protected $table       = 'dax_content_section';
     protected $primary_key = array( 'content_id' );
     protected $schema = array( 'content_id'       => array( 'maxlength' => 25 ),
                                'content'          => array(),
