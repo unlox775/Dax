@@ -100,3 +100,280 @@ span.dax_editable-current_focus:hover .dax_editable_buttons { display: none; }
     background: url(../images/upload_image.png) 50% 50% no-repeat;
 }
 
+
+
+/* --- HACK icon-ify edit link for JSON content  --- */
+.dax_editable-json {
+	width: 20px;
+	height: 20px;
+	background: yellow;
+	overflow: hidden;
+	text-indent: -90000px;
+	margin: 0 0 -20px -20px !important;
+	z-index: 1000;
+	border: 6px solid green !important;
+}
+.dax_editable-json.dax_editable-current_focus {
+	width: inherit;
+	height: inherit;
+	background: inherit;
+	overflow: inherit;
+	text-indent: inherit;
+	margin: inherit !important;
+	z-index: inherit;
+	border: inherit !important;
+}
+
+#dax-sidebar-show{ position: fixed;z-index: 9000; color:#ffffff;background-color: #636363; top: 0; border:3px solid #1a1a1a;padding: 5px;text-decoration: none; display:none;}
+#dax-sidebar-show div.dax-title{display: inline-block;padding: 0 10px 0 10px;}
+#dax-sidebar-show div.dax-icon{display: inline-block;width:20px;margin-top: -5px;vertical-align: middle;}
+#dax-sidebar-show div.dax-icon span.dax-icon-line{display:block;border-bottom: 3px solid #ffffff;width :100%;height: 7px}
+
+.dax-clear { display: block; clear:both; }
+
+/* ---  Sidebar  --- */
+#dax-sidebar{position: fixed;z-index: 9001;color:#ffffff;background-color: #636363;padding-right: 3px;width:320px;min-height: 400px;top: 0;left: -1000;display:none;}
+#dax-sidebar .dax-sidebar-close{
+	color: #ffffff;
+	position: absolute;
+	left: 0px;
+	top: -10px;
+	padding: 10px 30px 30px 10px;
+}
+#dax-sidebar .dax-left-arrow{
+	border-left: 2px solid white;
+	border-top: 2px solid white;
+	display: block;
+	width:10px;
+	height: 10px;
+	-ms-transform: rotate(-45deg);
+	/* IE 9 */-webkit-transform: rotate(-45deg);
+	/* Chrome, Safari, Opera */transform: rotate(-45deg);
+	margin-top: 5px;
+}
+#dax-sidebar .dax-sidbar-header{position:relative;text-align: center;font-size: 18px;font-weight: 500;border-bottom: 1px solid;}
+#dax-sidebar .dax-sidbar-header img{width: 50%;display: block;margin: 10px auto;}
+#dax-sidebar .dax-sidbar-header h2{font-size: 14px;margin-top: -10px;}
+#dax-sidebar .dax-sidbar-header a.dax-return-to-admin{color: red;display: block;margin-top: -10px;margin-bottom: 10px;}
+#dax-sidebar a {
+	color: #b0372f;
+	text-decoration: underline;
+}
+#dax-sidebar a:hover {
+	color: #e1473d;
+	text-decoration: underline;
+}
+
+.dax-batch-information {
+	background: #ccc;
+	color: #666;
+}
+.dax-row {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.dax-label-pane {
+	float: left;
+	width: 150px;
+	padding: 0px 20px;
+	text-align: right;
+	clear: both;
+}
+.dax-right-pane {
+	float: left;
+	padding: 0px;
+}
+.dax-label {
+	font-weight: bold;
+}
+.dax-value {
+	color: #6994b4;
+}
+.dax-title {
+	font-size: 18px;
+	font-family: verdana, sans-serif;
+	font-weight: bold;
+}
+
+.dax-nav-create-bar {
+	padding: 10px;
+    text-align: center;
+}
+.dax-btn {
+	border-radius: 3px;
+	border: none;
+	background: #ccc;
+	color: white;
+	padding: 4px 16px;
+    margin-left: 10px;
+}
+.dax-add-new-page-button { background: #418d68; }
+.dax-see-all-pages-button { background: #6994b4; }
+.dax-edit-meta-data-button { background: #6994b4; } /* 978f48 */
+.dax-delete-page-button { background: #b0372f; }
+.dax-return-button { background: #418d68; }
+
+.dax-page-information {
+	background: #eee;
+	color: #666;
+}
+
+.dax-page-actions-bar {
+	background: #ccc;
+	color: #666;
+	padding: 10px;
+    text-align: center;
+}
+
+.dax-panel {
+	margin: 15px 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background: white;
+    color: #666;
+    overflow: hidden;
+}
+
+.dax-panel-header {
+	border-bottom: 1px solid black;
+	padding: 5px 10px;
+	background: #ccc;
+}
+.dax-panel-header .dax-title {
+	font-size: 15px;
+}
+
+.dax-panel-body {
+	padding: 10px;
+}
+
+.dax-panel-buttons .dax-btn {
+	background: #999;
+	font-size: 10px;
+	padding: 2px 7px;
+}
+.dax-anchor {
+	position: relative;
+}
+.dax-debug-button {
+    position: absolute;
+    top: 8px;
+    right: 19px;
+}
+.dax-debug-pane {
+    z-index: 150;
+	display: none;
+    position: absolute;
+    top: 25px;
+    left: 254px;
+    background: white;
+    border: 1px solid #0087ff;
+    color: #666;
+    padding: 15px;
+    border-radius: 0 10px 10px 10px;
+    width: 550px;
+    max-height: 600px;
+    overflow: scroll;
+}
+
+#dax-sidebar .dax-sticky-foot {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 317px;
+}
+
+.dax-active-bar {
+	background: #999;
+	padding: 10px;
+}
+.dax-active-bar .dax-label-pane {
+    background: #eee;
+    width: 116px;
+    padding: 14px 9px 10px 0;
+    font-size: 16px;
+    margin: -10px 0 -10px -10px;
+    color: #666;
+    height: 49px;
+}
+.dax-active-bar .dax-label-pane i { font-size: 20px; }
+
+.dax-active-bar .dax-right-pane {
+	font-size: 14px;
+    width: 173px;
+    padding: 0 10px;
+    line-height: 1;
+}
+.dax-active-bar.published .dax-label-pane i { color: #418d68; }
+.dax-active-bar.published { background: #978f48; }
+
+.dax-active-bar .dax-active-on-message, .dax-active-bar .dax-active-toggle-on { display: none }
+.dax-active-bar.published .dax-active-on-message, .dax-active-bar.published .dax-active-toggle-on { display: inline }
+.dax-active-bar.published .dax-active-off-message, .dax-active-bar.published .dax-active-toggle-off { display: none }
+
+.dax-return-button-bar {
+	background: #ccc;
+}
+.dax-info {
+	color: #418d68;
+	padding: 3px;
+    margin: 0;
+}
+.dax-center {
+	text-align: center;
+}
+.dax-return-button-bar .dax-return-button {
+	width: 100%;
+    font-size: 28px;
+    margin: 0;
+    padding: 15px;
+    font-style: italic;
+    color: #fff;
+}
+
+/* ---  Sidebar iframe container  --- */
+#dax-iframe-container{
+    color:#000;
+    position: fixed;
+    /*z-index: 9050;*/
+    left:320px;
+    top: 0;
+    background-color: rgba(64,93,108,0.50);
+    overflow: scroll;
+    display:none;
+    text-align: center;
+        z-index: 9999999;
+}
+
+#dax-iframe-container .editor-header {
+	height: 40px;
+	background: #636363;
+	background: linear-gradient(#636363, #000);
+	padding: 6px 17px 0 15px;
+	position: relative;4
+}
+#dax-iframe-container .editor-title {
+	color: #eee;
+	text-align: left;
+	margin-top: 0px;
+    height: 33px;
+    overflow: hidden;
+}
+.action-buttons {
+	position: absolute;
+	top: 6px;
+	right: 17px;
+	text-align: right;
+	height: 40px;
+	width: 600px;
+}
+
+#dax-iframe-container iframe{
+    min-width: 580px;
+    width :100%;
+    height: 100%;
+    margin: 0px auto;
+    border: none;
+}
+
+

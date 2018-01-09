@@ -1,0 +1,58 @@
+<div style="position: relative">
+	<!-- ///  Controls to move Array Item Up / Down / Remove  /// -->
+	<span ng-if="positionControlsArray" class="cms-array-ctl-bar">
+		<button class="cms-array-ctl cms-array-ctl-up fa fa-long-arrow-up ng-class:{'cms-disabled':dax.isFirst(positionControlsArray, local)}"
+			ng-click="dax.moveUpInArray(positionControlsArray, local)"></button>
+		<button class="cms-array-ctl cms-array-ctl-down fa fa-long-arrow-down ng-class:{'cms-disabled':dax.isLast(positionControlsArray, local)}"
+			ng-click="dax.moveDownInArray(positionControlsArray, local)"></button>
+		<button class="cms-array-ctl cms-array-ctl-remove fa fa-close"
+			ng-click="dax.removeFromArray(positionControlsArray, local)"></button>
+	</span>
+
+	<!--
+		<h1 ng-if="! dax.__templates[local.template].hide_name_and_toggle && ! override_header"
+		    onclick="
+				if ( $(this).hasClass('closed') ) { $(this).removeClass('closed').next().show(); }
+				else { $(this).addClass('closed').next().hide(); }
+			"><span class="collapse-icon"></span>{{dax.__templates[local.template].name}}</h1>
+		<h1 ng-if="override_header"
+		    onclick="
+				if ( $(this).hasClass('closed') ) { $(this).removeClass('closed').next().show(); }
+				else { $(this).addClass('closed').next().hide(); }
+			"><span class="collapse-icon"></span>{{override_header}}</h1>
+	-->
+	<div ng-class="{'cms-content-tile cms-template-container': (!suppressContentTile) }">
+		<div class="header-panel" ng-if="! dax.__templates[local.template].hide_name_and_toggle && dax.__sub_templates[this_parent.local.template].length > 0 && ! override_header">
+			<h3 class="dropdown cms-template-title">
+				<a class="dropdown-toggle" id="{{__template_chooser_uniqId}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="display: inline-block">
+					<span ng-if="! dax.__templates[local.template]"><i>Error: wrong or re-named template name</i></span>
+					<span ng-if="! dax.__templates[local.template].hide_name_and_toggle && ! override_header">{{dax.__templates[local.template].name}}</span>
+					<span ng-if="override_header">{{override_header}}</span>
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu" aria-labelledby="{{__template_chooser_uniqId}}">
+					<li ng-repeat="sub_template in dax.__sub_templates[this_parent.local.template]"
+						class="dropdown-select-option ng-class:{'dropdown-select-checked': (sub_template.value == local.template)}"
+						>
+						<a ng-click="dax.changeTemplate(local,sub_template)" title="{{sub_template.value}}">
+							<span class="check fa fa-check"></span>
+							{{sub_template.label}}
+						</a>
+					</li>
+				</ul>
+
+				<!-- <select ng-change="prototypeNewTemplate(local)"
+					ng-model="local.template"
+					ng-options="obj.value as obj.label for obj in dax.__sub_templates[this_parent.local.template]"></select> -->
+			</h3>
+		</div>
+
+		<div class="content-panel">
+			<ng-include src="'/dax-virtual-preload/templates/'+ local.template +'.html'"/>
+
+			<div style="clear: both"></div>
+		</div>
+		<div style="clear: both"></div>
+	</div>
+	<div style="clear: both"></div>
+</div>

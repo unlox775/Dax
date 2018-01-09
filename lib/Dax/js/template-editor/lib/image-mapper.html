@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<link type="text/css" rel="stylesheet" href="./image-mapper/style.css">
+<link type="text/css" rel="stylesheet" href="./image-mapper/transformable.css">
+<script type="text/javascript" src="./image-mapper/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="./image-mapper/jquery.event.drag-2.0.min.js"></script>
+<script type="text/javascript" src="./image-mapper/transformable.js"></script>
+<link type="text/css" href="./image-mapper/transformable.css" rel="stylesheet">
+<script type="text/javascript" src="./image-mapper/canvas.script.js"></script>
+<script type="text/javascript" src="./image-mapper/mainFunctions.js"></script>
+</head>
+<body data-twttr-rendered="true">
+            <div id="application">
+    
+                <div id="step2" class="steps">
+                    <p>
+                        Drag your mouse to create squares where you'd your links to be, add thier target URL, alt text and taget window. when you're done click the "Finish" button below:
+                    </p><br>
+                    <div id="canvasContatiner"></div>
+                    <div id="linkAdder">
+                        <strong>Enter link URL:</strong>
+                        <input class="linkEditor" type="text" id="linkURL" autocomplete="on" value="" style="width:200px;">
+                        <strong>Enter link alt:</strong>
+                        <input class="linkEditor" type="text" id="linkAlt" autocomplete="on" value="" style="width:200px;"><br>
+                        <strong>Enter link target:</strong>
+                        <select class="linkEditor" id="linkTarget" name="linkTarget">
+                            <option value="_self">Same Window</option>
+                            <option value="_blank">New Window</option>
+                            <option value="_parent">Parent Window</option>
+                        </select>
+                    </div>
+                    <button id="step2End">Click here to finish</button>
+                </div>
+                
+                <div id="step3" class="steps" style="display: none;">
+                    <table style="width:100%; border:0;">
+                        <tbody><tr>
+                            <td style="width:50%;">
+                                <textarea class="outputCode" id="HTMLCode" readonly=""></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                        	<td colspan="2">
+                            	<strong class="stackLink"></strong>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                </div>
+            </div>
+</body></html>

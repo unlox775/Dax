@@ -1,0 +1,84 @@
+.miniBox{
+	width:6px;
+	height:6px;
+	background:white;
+	border:1px solid black;
+	position:absolute;
+	z-index:2;
+	display:none;
+	margin-top:-4px;
+	margin-left:-4px;
+}
+
+.selected{
+	cursor:move;
+	z-index:1;
+	border:1px solid black;
+	margin-left:-1px;
+	margin-top:-1px;
+}
+			
+.selected .miniBox{
+	display:block;
+}
+.topLeft{
+	top:0%;
+	left:0%;
+}
+.bottomRight{
+	left:100%;
+	top:100%;
+}
+.topLeft, .bottomRight{
+	cursor:nw-resize;
+}
+
+.topCenter{
+	top:0%;
+	left:50%;
+}
+.bottomCenter{
+	top:100%;
+	left:50%;
+}
+.topCenter, .bottomCenter{
+	cursor:n-resize;
+}
+
+.topRight{
+	top:0%;
+	left:100%;
+}
+.bottomLeft{
+	top:100%;
+	left:0%;
+}
+.topRight, .bottomLeft{
+	cursor:ne-resize;
+}
+
+.middleLeft{
+	left:0%;
+	top:50%;
+}
+.middleRight{
+	left:100%;
+	top:50%;
+}
+.middleLeft, .middleRight{
+	cursor:w-resize;
+}
+
+.rotator{
+	position:absolute;
+	display:none;
+	top:-16px;
+	right:-20px;
+	height:16px;
+	width:16px;
+	background:url(../images/rotate_icon.png) 0 0 no-repeat;
+}
+
+.selected .rotator{
+	display:block;
+}

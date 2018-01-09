@@ -1,0 +1,24 @@
+		<div>			 
+			<div class="dropzone single-dropbox" style="border: 0; padding: 0; background: none; min-height: 150px">
+				<div>
+					<div style="position: relative; min-height: 150px">
+						<img ng-if="  existing.img.toString().substr(-3) != 'mp4'" ng-src="{{existing.img}}" style="width:100%;" />
+						<video ng-if="existing.img.toString().substr(-3) == 'mp4'" width="100%" ng-src="{{existing.img}}" preload muted autoplay loop>
+							<p>Try this page in a <a href="http://browsehappy.com/">modern browser</a>!</p>
+						</video>
+						<div ng-click="editFile()" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;">
+							<div style="display: table; height: 100%; width: 100%">
+								<div style="display: table-cell; vertical-align: middle;">
+									<div style="text-align: center; text-shadow: 3px 3px 13px #000; font-size: 22px; color: white;">Drop Here To</br>Re-Upload</div>
+								</div>
+							</div>
+						</div>
+						<div ng-style="showDropzoneOutline() ? {} : {display:'none'}" class="dropzone-outline" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; background: white;">
+							<div style="margin: 0px 13px; height: 100%; border: 4px dashed #808080; border-radius: 18px; text-align: center; padding: 23px 0">
+								Click to Browse<br/>or Drag-and-Drop<br/> to Upload
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
