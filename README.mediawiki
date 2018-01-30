@@ -1,38 +1,396 @@
 This is the DAX content management system!
 
 
-== Why create an Edit-in-Place CMS?! ==
+== What is Dax? Crash course on How it Integrates ==
 
-DAX lets the End-User switch to "EDIT MODE" then just browse
-around their web site and edit their content right in-place.
-This lets them edit headers, images, and large blocks of
-text.  We've found that modern web design doesn't fit the
-bill of a single content area per web page.  And because
-layout can be complex and flow in a very custom style, it's
-almost impossible for the CMS to actually be able to change
-and/or control the flow of items on the page.
+Dax is an '''''Overlay CMS''''', with '''''time-set publish batches''''', that is built on '''''ID-based, modular, content nodes''''' that can be '''''organized hierarchically'''''.
 
-So, to heck with it!  Lets leave layout in the hands of the
-experts (Us), and let the clients worry about what to put in
-our layout.  Joomla and even wordpress are allowing clients
-to edit more than one content block per page from their Admin
-area.  However, this style offers Nothing in the way of
-WYSIWYG; usually the style for the text they just entered
-cannot be viewed in-context until they publish and go visit
-the web page.
+There are 3 main patterns for adding CMS functions:
+# '''Type-A - In-Page Edit-In-Place''' - (simple Non-Layout text content or images)<pre><?= \Dax::load()->module('input','contact-us-h1') ?></pre><pre><?= \Dax::load()->module('richtext','receipt-page-thank-you-message') ?></pre>
+# '''Type-B - In-Page Advanced Layout''' (uses admin-edit-pane, but page is still controlled by PHP framework) <pre><?= \Dax::load()->get_template_content('pdp-page-standard-footer','Global PDP Footer (shown in All Pages)','Base/GeneralPageLayout') ?></pre>
+# '''Type-C - New-Page Advanced Layout''' (uses admin-edit-pane, and "New Page" button, which uses the Page Template system)
 
-Another advantage of Edit-in-Place are DAX's Image Upload
-Modules, which let you replace an image instantly and
-in-context.  Using the <a
-href="http://istyle.dax-dev.com/">Image Style System</a>,
-we are also able to have instant advanced compositing of the
-image they just uploaded to frame, sharpen, crop or more.
+=== An Overlay CMS ===
+
+By this I mean you can add it as a very-minimal layer on an existing PHP site. You can have full pages that are not driven by the CMS, OR a page that is only using CMS for a small part of the page.
+
+This means the whole site is NOT driven by the CMS, only the parts you choose to give to it.  Contrast this with WordPress or Joomla, where any non-CMS-driven blocks are written as modules OF the CMS, Dax "adds on" to a custom-build PHP application.
+
+'''Why Not''' just give ALL the public site to the CMS, as it's foundation?
+# '''Main reason:''' When the system you are building's primary purpose isn't content, like an e-Commerce system, you want to build the checkout process in a normal PHP framework, THEN as a second priority, give the Marketing team flexibility over home page, adding new pages so that thet can Also have a nice CMS to get done what they think.
+#  In that model, you don't need the Marketing team to be able to edit much in the checkout screens, re-arrange the steps, other stuff like that.  So build that stuff in straight PHP framework.  Then, you can turn "cosmetic" things, even in the checkout process, over to the CMS, BECAUSE it is an overlay, you can add it very simply to any page, for only the steps you need.
+# As an overlay, it can be added to any system, without having to add it AS the foundation of that system.  It's simple, fast, and gets out of the way.
+
+===  Time-Set Publish Batches ===
+
+The publish batch system resembles the old-school overhead projectors with transparencies, stacking one on top of each other:
+# The order of the transparencies is determined by the start date of the publish batch
+# Changing a piece of content (ID-Based) overrides it's value from a previous "lower" transparency
+# The publish batch "transparency" Only contains the few changes made.  Deleting a publish batch allows a "lower" transparency's changes to show through again.
+# The start date of a publish batch can be set to a future date/time, at which time the "transparency" is dropped into place.
+# Publish batches can also have an "end" date, at which time, it's "transparency" is pulled out of the stack.  Any "lower" changes on those content ID's are automatically restored.
+# '''Extension for Multi-variate testing:''' if you have A/B tests server-side set up, you can extend Dax to optionally tag a publish batch as "A" or "B", upon which it will add one or the other transparency to the stack depending on the track the user's session is assigned.
+
+===  ID-Based, Modular, Content Nodes  ===
+
+Each piece of content is based on a NAMED content ID, Not a incremental ID.  The ID you are using (for Type-A and Type-B) is defined when you add the Dax module tag into your PHP template.  The ID in most cases will be something unique to your site, like "home-main-content", or "contact_us-top".
+
+However, one of the strengths of ID-Based content nodes is that you can add '''''Global Shared''''' content.  Most commonly this is done to set a Global Banner, that shows at the top of each page.  If you edit this banner while on Page A, then on Page B, if it uses the same ID, the content there will cascade.  Another common usage is for PCP or PDP pages, where you want to set static content at the bottom of Every PDP page, like a recommendation's bar or the company's shipping policy.  An edit of these CMS nodes on any PDP page will cascade to ALL PDP pages.
+
+These ID's are also the "unit" of how the publish batch fallback works.  For example, if you have a single ID on the home page "home-main-content" (with a Type-B advanced layout), and say that it commonly has a large hero, then 2 rows of 3-up grids below it.  Both the Hero image, and the 2 3-up rows are considered a Single content node, with the ID "home-main-content".  When a CMS admin goes in to change just the Hero image only, (setting it to go live Next Friday, 10 days from now), it Really has saved the whole content (hero and two 3-up rows) to go live at that time.  If, during the next 10 days, makes edits to the two 3-up rows, (to change the cookie pictures to brownies), he ''May be surprised'' when next Friday rolls around, the "new hero" publish batch goes live, and switches his two 3-up rows back to cookies.  This has happened because the entire content node is saved in the publish batch.
+
+A possible solution to the previous example, would be to make 2 content nodes "home-page-hero" and "home-page-content".  We did this with Glasses.com, which hey felt flowed better with their marketing process.  It can be done any way you would like.
+
+=== Modules organized Hierarchically ===
+
+This allows you to create logical pieces of functionality, and use it in multiple places, to avoid constantly duplicating functionality in similar modules.  When defining a 1-up, 2-up, 3-up grid modules, in which each grid cell has the ability to upload an image w/ image-map, '''''you might''''' build each module to include the Admin UI controls for image upload, and the image mapping function, '''duplicating that logic each time.'''
+
+However, to doing it hierarchically '''''you can avoid the duplication'''''.  You would first make a single module (e.g. ImageWithImageMap), with it's admin logic to upload the image, do image-map, etc.  You would design it to be flexible to work in any shape of container.  In the hierarchy, you can actually pass variables, like image-ratio in from the parent to the child module.  Then, you would create the 1-up, 2-up, 3-up grid modules.  These would each be very tiny, simple templates that do nothing but set 1, 2, or 3 DIVs each only with an "include" call to ImageWithImageMap.
+
+This also allows for separation of concern, as all the grid templates are "doing" is defining grid structure, not the content in the structure.  The ImageWithImageMap module is Only concerned with images and content mapping.
+
+Note, that in addition, whenever you do an "include" in Dax, you can simply extend to allow More Than One type of sub-module.  For example, in each grid, you could allow that cell to allow the ImageWithImageMap, VideoInPlace, RichText, or RawHTML modules.  In the Dax admin, this would automatically add a dropdown in each grid cell to allow the Admin User to choose which of these modules they want to use.
+
+Having a good hierarchy IS GOOD TO DEFINE AS A GROUP IN ADVANCE, and document decisions, so you can keep things organize going forwards.  In projects with multiple devs, it is very common for Devs to just make a new module every time, but this leads to code duplication, and ultimately confuses the CMS Admin Users who see patterns in some places, but not in others.
+
+=== Examples ===
+ 
+e.g. these are using the Phalcon framework, and an Admin area to log in.
+
+==== A Contact Us Page - part-controlled by the CMS (Type-A or Type-B) ====
+
+* You first create the /contact-us/ page as ContactUsController.php in Phalcon, and built the main structure of the page in views/contactus/index.phtml.  No CMS yet.
+* '''Using Type-A Nodes:'''
+** You could make the header title editable, let them edit the paragraph of instructions before the form and maybe even make a node to let them configure the text of the Thank you Message
+** With Type-A, they could '''not''', for example, add a new banner, or a 3-column grid above or below the form.
+* '''Using Type-B Nodes:'''
+** You could add a "Before Form" section, and an "After Form" section where they could bring into either section whatever content blocks (you can limit if you choose) like Grids, Headers, videos, or any other layout defined in your Dax modules.
+*  In either case, this would allow them to change the content parts of the page, but your form in the middle still is just Phalcon driven, and doesn't need to know about the CMS
+
+==== Cooking Recipe Pages - new page/URL for each recipe (Type-C) ====
+
+* You define a list of content layout modules that you would like them to be able to add on a Recipe Page (sometimes all types of layout modules, but often a sub-set)
+* You build a "Preset" default state that you want a new recipe page to start at.  E.g. with "Example Recipe" as a title, some dummy ingredients, Lorem ipsum in the recipe steps, etc.
+** Often the best way to do this is to just use the CMS itself to build the page, as you want it to show.  Then just grab it's JSON representation from the content in the database, and store it in the $__properties_and_defaults in your module class (convert it from JSON to PHP syntax).
+** Sometimes however, you may not choose to use the "Build your own page" style for a recipe page like this.  I.e. your Admin doesn't have the "Add a Section" main loop of templates because for style-guide, you don't Want to allow recipe pages to have strange varying layouts.  If you want it to always have the same layout, and don't want to allow "Add a Section" see the "Alternate Content Layouts" section below.
+* You build one or more modules for the Recipe Page Layout:
+** A master Template ''RecipePage'' that includes the slots for the below child templates
+*** This template would probably have the fields for data-values of your recipes, like ''name'', ''instructions'', ''prep_time'' and ''cooking_temperature''.  These are simple input in your admin, and PHTML templates
+** A child template for ingredients ''RecipeIngredients'', OR possibly as an array of single ''RecipeIngredient'' templates, with an "Add Ingredient" button
+** A child template ImageUpload, which might be a sub-module you use elsewhere on the site:
+* Once complete, you add your new Page template to the '''''custom_page_templates''''' config array:<pre>$this->config('custom_page_templates', array('Base/GeneralPage','Base/RecipePage'); </pre>
+* It should then show up in the dropdown, when in the CMS you hit "New Page".  The new page should start with the default "Preset" you defined.
+* Note: Because the PageID and "Base/RecipePage" are part of the content ID in the dax_content database table, you could even query, come up with a list of all recipes defined by the system.   E.g. if you wanted to add a "recipe search" function, or list of all recipes.  The content in the nodes can be parsed as JSON, to read the recipe name, etc.  Just be careful to 1) Join to the publish batches table, so you can filter out in-active, un-launched batches, and then 2) group by Content ID, so you don't get multiple instances of the same recipe.  It would be safest to just query out the Content ID's then use Dax::get_content() to read the most-recent value of that node
 
 
-== How it works ==
+== Differences from Dax v1 to Dax v2 ==
 
-# Install the "dax" folder, and the "istyle" folders
-# Edit the config files (unless you just put them in the docroot, then you're all ready to go)
-# Provide some way to log in and out.  The above form source is all that is needed.  You can put this in some un-listed URL at minimum.
-# Then, For each page that you want editable add this to the very top (if it does SESSION, it needs to do headers):<pre><?php require_once($_SERVER['DOCUMENT_ROOT'] . '/dax/dax.inc.php'); ?></pre>Add add this to the head tag:<pre><?php require_once($_SERVER['DOCUMENT_ROOT'] . $DAX_HEADERS_INCLUDE); ?></pre>
-# It stores all the text strings (and image paths) in a SQLite DB in /dax/sqlite/
+=== Dax v1 overview ===
+
+Dax v1 was based on the main template, that a whole (Type-B and Type-C) node/page was built on was a JSON.  That file referred to named templates, which had markup files like:
+* content-grid.html - ''angular template, that drove the admin''
+* content-grid.phtml - ''PHP template to display the front-end content''
+
+'''Here is an example JSON for the home-page (Dax v1):'''
+<source lang="js" collapse="true" first-line="1">
+{ "content-grid": {
+	  "name": "Master Content Grid",
+	  "sub_templates": [
+		  "grid-plain-text",
+		  "image-content-map",
+		  ...
+	  ],
+	  "prototype": { "grid_sections":[] },
+	  "default_template": "grid-plain-text"
+  },
+  "grid-plain-text": {
+	  "name": "Raw HTML Text",
+	  "sub_templates": [],
+	  "prototype": {"copy":""}
+  },
+  "image-content-map": {
+	  "name": "Image Tile",
+	  "sub_templates": [],
+	  "prototype": { "image_url":"", "image_map":"", "alt":"", "promotion_name":""}
+  },
+  ...
+}
+</source>
+
+'''And an example Admin .HTML file (Dax v1):'''
+<source lang="html" collapse="true" first-line="1">
+<div>
+	<div ng-repeat="x in __one" ng-init="this_parent = local">
+		<div class="col-xs-12" ng-repeat="local in local.grid_sections" style="position:relative">
+			<!-- ...  repositioning controls ... -->
+			<ng-include src="'/lib/dax/js/template-editor/views/template-chooser.html'"/>
+		</div>
+	</div>
+	<div class="col-xs-12">
+		<div style="height: 144px;text-align: center;border: 1px solid;font-size: 32px;margin: 8px 5px;">
+			<a ng-click="addTemplateToArray(local,'grid_sections')" style="display: block; width: 100%; height:100%; padding-top: 50px;">Add a Section</a>
+		</div>
+	</div>
+</div>
+</source>
+
+'''And an example Front-end .PHTML file (Dax v1):'''
+<source lang="php" collapse="true" first-line="1">
+	<div class="content-grid">
+		<? foreach ( $this->grid_sections as $section ) { ?>
+			<?= $this->template($section) ?>
+		<? } ?>
+	</div>
+</source>
+
+
+=== Dax v2 Major Changes ===
+
+[[File:Dax_v2_Admin_Panes.png|350px|thumb|right|Dax V2]]
+
+Major changes include:
+# Every Module is now a PHP class
+# You can now write custom functions or behaviors in your PHP class for a module
+# HTML and PHTML files are now in sub-folder named after module:
+#* ''ModuleName''/'''admin.html''' - ''angular template, that drove the admin''
+#* ''ModuleName''/'''front.phtml''' - ''PHP template to display the front-end content''
+# When a class extends it's parent, it by-default inherits it's '''admin''' and '''front''' templates as well
+# Sub-modules are now referenced by name in the PHP class.  (No more hyper-duplication of template definitions)
+# Face-lift to Admin edit screen.  Now an on-left panel, when editing Type-B or Type-C templates.
+# Debug Panel to see which templates are being used on the current page, and the underlying content
+
+<br clear="both"/>
+'''New Class-based Template example:'''
+<source lang="js" collapse="false" first-line="1">
+<?php
+
+namespace Dax\Templates\Base;
+
+class GeneralPage extends \Dax\Templates\BaseTemplate {
+	public static $__admin_display_name = "General Content Page";
+	public static $__properties_and_defaults = array(
+		'grid_sections' => array(
+			// default state for new custom page of this template
+			),
+		);
+
+	public static $__sub_templates = array(
+		"General/RichText",
+		"General/PlainText",
+		"General/ImageContentMap",
+		...
+		);
+	public static $__hide_name_and_toggle = true;
+	public static $__default_template = "General/RichText";
+}
+</source>
+
+== Installation of new (Dax v2) ==
+
+== Upgrading From Dax v1 to Dax v2 ==
+
+The good news, is that the underlying Content data itself, and it's format has NOT CHANGED from v1 to v2.  I.e. you Can restructure all your template code arrangement and template code, and your in-DB content will not have to change.
+
+However, with the new template-naming capabilities, of v2, you Can have better heirarchical namings, like "CategoryPage/FacetMenu/Item" instead of 'category-facet-item'.  Dax v2 Does have a renaming map, so that you can auto-link old names to new ones, so you can re-organize your templates.  NOTE: this does not actually fix data retro-actively, and won't switch the template name in the data, until the node has been loaded and saved again in the admin.  Sometimes however, it is better to write a script to find/replace all old template names in your data.
+
+'''TODO:''' in Dax we should create a "migrate name map" script that would read the re-map array and actually go through the database, renaming as needed.  After running once, you could then set your '''template_rename_map''' back to empty.
+
+=== Checklist of Steps to perform ===
+
+# Convert the CONFIG file to the new format:
+## Define an '''uploaded_images_hostname Config''': <pre>$this->config('uploaded_images_hostname',\App::getPrimaryDomain());</pre> 
+##* This is passed to the admin AngularJS app, so upon image upload, it can set the correct hostname.  (Common use: in case you are using a CDN alternate hostname to serve your images)
+## If you are going to be doing Type-C templates ("Add new page" button), you will need to define at least one Page Template (see below). and reference it in your config like this: <pre>$this->config('custom_page_templates', array('Base/GeneralPage') );</pre>
+# Identify list of all modules used in all JSON definitions
+## Verify as you do this, that no one module has 2 different schemas in two different JSON files (this was a problem in v1)
+# Create a new directory to use as a Dax Template Repository. (e.g. application/www-dax-templates)
+# For each module, create a new PHP class
+## Determine a new name if needed, and add to the '''template_rename_map Config''': <pre> $this->config('template_rename_map', [ 'content-grid' => 'General/ContentPage', 'plain-text' => 'General/PlainText' ]);</pre>
+## Transfer these JSON keys to PHP variables:
+### '''name''' --> '''$__admin_display_name'''
+### '''prototype''' --> '''$__properties_and_defaults'''
+### '''sub_templates''' --> '''$__sub_templates'''
+### '''hide_name_and_toggle''' --> '''$__hide_name_and_toggle'''
+### '''default_template''' --> '''$__default_template'''
+## Create directory named the same as the PHP class: e.g. '''''General/PlainText'''''
+## Move the template files into that dir
+### Admin (AngularJS) HTML file  E.g. <pre>mv application/www-views/scripts/dax-templates/admin/plain-text.html application/www-dax-templates/General/PlainText/admin.html</pre>
+### Front-end (PHP) PHTML file  E.g. <pre>mv application/www-views/scripts/dax-templates/plain-text.phtml application/www-dax-templates/General/PlainText/front.phtml</pre>
+## '''''-OR-''''' if your template files are tiny, you can now skip the last 2 steps, and put the content into your PHP class, and put their content into method calls:
+### Instead of '''admin.html''': <pre>public function adminHTML() { return '<label>Copy:</label><textarea ng-model="local.copy"></textarea>'; } </pre>
+### Instead of '''front.phtml''': <pre>public function echoFrontHTML($local) { echo '<div class="dax-plaintext">'. $local->copy ."</div>"; } </pre>
+
+
+=== OPTIONAL steps, to tighten stuff up ===
+
+==== Use some of the new AngularJS directives included with Dax v2 ====
+
+These are things that were common, and repetitive in Admin templates previous.  The code was duplicated Many types with manual includes, etc...  These directives GREATLY reduce the size of your admin HTML templates.
+
+===== add-to-array-bar =====
+
+This is the commonly-used 'Add a Section' bar at the bottom.  You just pass a link to the array you want it to add to:
+<pre>
+<add-to-array-bar position-controls-array="local.grid_sections" label="Add a Section"></add-to-array-bar>
+</pre>
+
+* ''position-controls-array'' attr links the array that is to be modified, when adding a new item '''(required)'''
+* ''label'' attr is what text to show in the button
+* ''size'' attr can be passed, which is raw CSS you can add in which will be added to the main element
+* ''override-template'' attr can be passed, which overrides the "default_template" value of the module you are in
+
+===== template-chooser =====
+
+This includes a template, and will add a select box chooser to let the Admin change the template to other templates in the '''sub_templates''' array for the current module you are in.
+
+When new, it will use the '''default_template''' defined in the module you are currently in.  To override this, you can use the ''override-template'' option of '''add-to-array-bar'''.
+
+<pre>
+<div class="col-xs-12" ng-repeat="sub_section in local.grid_sections">
+	<template-chooser template-data="sub_section" position-controls-array="local.grid_sections"></template-chooser>
+</div>
+</pre>
+
+* ''template-data'' attr is the link to your '''local''' data.  Usually always linked to '''local.<something>''', or indirectly to a ng-repeat variable, as above. '''(required)'''
+* ''position-controls-array'' attr can be passed, which then adds the "up", "down" and "delete" buttons.  Usually used in conjunction with add-to-array-bar.
+* ''supress-content-tile'' attr can be passed, which causes it to skip the '''cms-template-container''' CSS class around the template, which adds the border box
+* ''override-options'' attr can be passed (JSON), which sets scope keys in the child scope of the template directly.  This is a way for the parent to communicate intent to the child.
+** A common use is to set the "istyle" config telling the child the image-compositing code, and the aspect ratio that uploaded pictures should use.  E.g.: <pre><template-chooser template-data="local.block3" override-options="{'istyle' : {'width' : '450', 'height' : '350', 'istyle_code' : '450x350'}}"></template-chooser></pre>
+
+===== template-include =====
+
+This is just like '''template-chooser''', but it does NOT include:
+# The dropdown to change to another template
+# The ''position-controls-array'' option (or the  "up", "down" and "delete" buttons)
+
+<pre>
+<template-include which="General/ImageContentMap" template-data="main_section.feature_image" override-options="{'istyle' : {'width' : '275', 'height' : '340', 'istyle_code' : '275X340'}}"></template-include>
+</pre>
+
+* Pass the ''which'' attr which is the template to be included '''(required)'''
+* It does have the  ''supress-content-tile'' and ''override-options', as in '''template-chooser'''.
+
+=== Define custom AngularJS Directives, Services and CSS files ===
+
+These are done in the config file, usually adding things into the Header or Footer keys, which are straight HTML added in the Editor IFRAME (only in Admin mode).  The config keys are:
+* '''advanced_editor_custom_headers'''
+* '''advanced_editor_custom_footers'''
+
+
+==== Define your own directive, for use in Admin templates ====
+
+<source lang="php">
+###  Editor Extra Footers (Loaded at the bottom of the page)
+$this->config('advanced_editor_custom_footers',<<<HTML
+
+	<!--  ///  Custom Directives   ///  -->
+	<script src="/lib/dax-admin-directives/grid-height-selector.js"></script>
+	<!--  ///  Custom Services   ///  -->
+	<script src="/lib/dax-admin-services/modal.js"></script>
+	<!--  ///  Custom CSS   ///  -->
+	<link rel="stylesheet" type="text/css" href="/lib/dax-admin-css/filterSubSection.css">
+
+HTML
+);
+</source>
+
+'''Example simple Directive:'''
+<source lang="js" collapse="true">
+angular.module("cmsEditApp")
+.directive('gridHeightSelector', [function () {
+	var default_scope = {
+		outputModel : '=',
+	};
+
+	function link(scope, element, attrs) {
+	}
+	return {
+		restrict: 'E',
+		scope: default_scope,
+		link: link,
+		template: (
+			'<select ng-model="outputModel">'
+			+'	<option value="208">XSmall - 208px</option>'
+			+'	<option value="275">Small - 275px</option>'
+			+'	<option value="350">Medium - 350px</option>'
+			+'	<option value="452">Large - 452px</option>'
+			+'	<option value="605">XLarge - 605px</option>'
+			+'</select>'
+	  		),
+	};
+}]);
+</source>
+
+==== Include a different AngularJS Module ====
+
+You would first need to include the JS to load your library
+
+<source lang="php">
+###  Editor Extra Headers (loaded after angular and JQuery, but before cms App)
+$this->config('advanced_editor_custom_headers',<<<HTML
+
+	<!--  ///  Extra Angular Modules   ///  -->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.min.js"></script>
+
+HTML
+);
+</source>
+
+'''Then, this array adds the module to the Angular app itself:'''
+<source lang="php">
+$this->config('advanced_editor_custom_angular_modules',array(
+	'ui.bootstrap'
+));
+</source>
+
+== Documentation on Dax Systems ==
+=== Page Templates - Making a Pre-set Template content for a type of page ===
+
+[[File:Template_chooser_in_Add_Page.png|200px|thumb|right|Template Chooser]]
+
+Page Templates are new in Dax 2.  They essentially provide a pre-filled template for a page, and some categorization in the "All Pages" section.  When creating a new CMS page, one of the select boxes is "Page Template".  Below are the steps to add a new template for one:
+
+# Create the new Template class, usually in the "Base" sub-folder, e.g. "Base/ArticlePage.php"
+## Usually all page templates extend from a base template, so they all effectively have the same sub-templates list.  Note, this means that all page templates like this really CAN define the exact same page.  The only thing therefore we are doing with this template is making a "default" state upon creating a new page.  This is purely to make it less-complicated for the client.
+##  However, not all page templates need to extend a base like this.  You can have in your Page Template one or more content templates that no other base has.
+# Give your template a new name.  The name you define in the class will be shown:
+## in the "New Page" modal template select box
+## in the change-template select box in the CMS left panel
+# Define a good $__properties_and_defaults that shows a good example state for newly created pages with your template
+## This defaults array needs to be exactly the JSON you want the new page to have upon its creation.
+## Often the best way to do this is to make an actual page with all the content/sections you want, then export the JSON and convert it to a PHP array to paste into the value of this variable
+## Try to use headers like "Exampe Header", and use Lorem-Ipsum text for paragraphs, etc.  This helps the CMS admin who first uses this template an idea of what the page should commonly look like.
+# If your base template does not have the adminHTML() and echoFrontHTML() sections overridden, you may need to copy the admin.html and front.phtml files.  Or, symlink them in place to prevent duplicate code.
+# Optionally define a good $__default_template, as this is the template that will be added when they click "Add Section" at the bottom of the edit admin screen
+# Add your new template into application/configs/dax-config.inc.php:
+
+[[File:Page_Template_all_pages.png|200px|thumb|right|All Pages grouped by Template]]
+
+<pre>
+$this->config('custom_page_templates', array(
+    'Base/ArticlePage.php',
+    ));
+</pre>
+
+=== Image Uploading with iDropzone and iStyle ===
+
+This is an implementation that includes these packages to accomplish image uploading, storage and advanced image compositing:
+
+* iStyle - Image and Compositing - https://github.com/unlox775/IStyle
+* Dropzone - Drag and Drop Image Uploading - http://www.dropzonejs.com/
+* iDropzone - AngularJS directive harness for Dropzone (Written for Dax)
+
+'''First Question: Does Dax handle Image Uploading?'''
+* No.  Dax stores only paths TO images.
+* And... YES.  iStyle was written as a companion product, At the same time as Dax.
+
+'''Why the separation?'''
+* Because with minimal work, you could switch out and store your images on another Image Service / CDN, like Scene7.
+* Image are not the only kind of rich media, and other types (Youtube, Vimeo links, etc), you would not upload your own videos to be stored on your site.  
+* By only storing URL to the asset, it follow a pattern that works for a larger range of media types
+* To encourage you to use a CDN.  Better for your site to store large assets off-site, for multiple reasons.  iStyle is here in case you do not want to, or to help you create the "seed repo" for your CDN.
+* Dax is good at content management, storing simple JSON data-set.  Adding an image-storage component, would just be bloat.
+
+==== How to Install / Configure ====
+
+Here are docs on how to do the Install -- [[Install and Configure iDropZone and IStyle]]
